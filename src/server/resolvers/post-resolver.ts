@@ -1,33 +1,37 @@
 import { Post, PostModel } from "../entities/post-entitie";
-import { Resolver, Query, Arg, Mutation } from "type-graphql";
+import { Resolver, Query, Arg, Mutation, Root } from "type-graphql";
 import { PostInput } from "./input-types/post-input-type";
-import { CommentInput } from "./input-types/comment-input-type";
-import { CommentModel } from "../entities/comment-entitie";
+import { Error } from "mongoose";
+import { UserModel } from "../entities/user-entitie";
 
 @Resolver(Post)
 export class PostResolver {
-    @Query((_) => Post, { nullable: false })
+    @Query(() => Post, { nullable: false })
     async post(@Arg("id") id: string) {
-        return await PostModel.findById({ _id: id });
+        return await PostModel.findById(id);
     }
 
-    @Query((returns) => [Post])
+    @Query(() => [Post])
     async posts() {
         return await PostModel.find();
-	}
+    }
 
     @Mutation(() => Post)
     async createPost(
         @Arg("data") { authorId, content }: PostInput
     ): Promise<Post> {
-        const post = (
-            await PostModel.create({
+        const author = await UserModel.findById(authorId);
+        if (author) {
+            const post = await PostModel.create({
                 content,
-				authorId,
-            })
-        ).save();
+                author,
+            });
+            await post.save();
 
-        return post;
+            return post;
+        } else {
+            throw new Error("Author not found");
+        }
     }
 
     @Mutation(() => Boolean)

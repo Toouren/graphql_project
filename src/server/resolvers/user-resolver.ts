@@ -4,12 +4,12 @@ import { UserInput } from "./input-types/user-input-type";
 
 @Resolver(User)
 export class UserResolver {
-    @Query((_) => User, { nullable: false })
+    @Query(() => User, { nullable: false })
     async user(@Arg("id") id: string) {
-        return await UserModel.findById({ _id: id });
+        return await UserModel.findById(id);
     }
 
-    @Query((returns) => [User])
+    @Query(() => [User])
     async users() {
         return await UserModel.find();
     }
@@ -18,12 +18,11 @@ export class UserResolver {
     async createUser(
         @Arg("data") { login, password }: UserInput
     ): Promise<User> {
-        const user = (
-            await UserModel.create({
-                login,
-                password,
-            })
-        ).save();
+        const user = await UserModel.create({
+            login,
+            password,
+        });
+        await user.save();
 
         return user;
     }

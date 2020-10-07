@@ -5,7 +5,10 @@ import { ObjectId } from "mongodb";
 @InputType()
 export class CommentInput implements Partial<Comment> {
     @Field()
-    content: string;
+	content: string;
+	
+	@Field(() => ID)
+	postId: ObjectId;
 
     @Field(() => ID)
     authorId: ObjectId;

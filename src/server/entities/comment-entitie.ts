@@ -1,6 +1,7 @@
 import { ObjectType, Field, ID } from "type-graphql";
 import { prop as Property, getModelForClass, Ref } from "@typegoose/typegoose";
 import { User } from "./user-entitie";
+import { Post } from "./post-entitie";
 
 @ObjectType({ description: "COMMENT model" })
 export class Comment {
@@ -11,9 +12,13 @@ export class Comment {
     @Property({ required: true, type: String })
     content: string;
 
-    @Field(_type => String)
-    @Property({ ref: User, required: true })
-    authorId: Ref<User>;
+    @Field(_type => User)
+    @Property({ required: true, type: User })
+	author: User;
+	
+	@Field(_type => Post)
+    @Property({ type: Post })
+	post: Post;
 }
 
 export const CommentModel = getModelForClass(Comment);

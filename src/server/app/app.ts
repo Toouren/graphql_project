@@ -5,6 +5,7 @@ import { graphqlHTTP } from "express-graphql";
 
 import { PostResolver } from "../resolvers/post-resolver";
 import { UserResolver } from "../resolvers/user-resolver";
+import { CommentResolver } from "../resolvers/comment-resolver";
 
 const main = async () => {
     /** Создание Express сервера */
@@ -12,7 +13,7 @@ const main = async () => {
 
     /** Создание GraphQL схемы */
     const schema = await buildSchema({
-        resolvers: [PostResolver, UserResolver],
+        resolvers: [PostResolver, UserResolver, CommentResolver],
         emitSchemaFile: true,
         validate: false,
     });

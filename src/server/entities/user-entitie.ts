@@ -6,7 +6,7 @@ export class User {
     @Field(() => ID)
     id: string;
 
-    @Field(_type => String)
+    @Field(_type => String, { nullable: true })
     @Property({ required: true, type: String })
     login: String;
 
