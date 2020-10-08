@@ -1,6 +1,5 @@
-import { ObjectType, Field, ID } from "type-graphql";
-import { prop as Property, getModelForClass, Ref, mongoose } from "@typegoose/typegoose";
-
+import { getModelForClass, prop as Property } from "@typegoose/typegoose";
+import { Field, ID, ObjectType } from "type-graphql";
 import { User } from "./user-entitie";
 
 @ObjectType({ description: "POST model" })

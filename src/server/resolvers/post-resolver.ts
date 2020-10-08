@@ -1,8 +1,10 @@
-import { Post, PostModel } from "../entities/post-entitie";
-import { Resolver, Query, Arg, Mutation, Root } from "type-graphql";
-import { PostInput } from "./input-types/post-input-type";
 import { Error } from "mongoose";
+import { Arg, Mutation, Query, Resolver, Authorized, Ctx } from "type-graphql";
+
+import { Post, PostModel } from "../entities/post-entitie";
 import { UserModel } from "../entities/user-entitie";
+import { PostInput } from "./input-types/post-input-type";
+import { IContext } from "../interfaces/context";
 
 @Resolver(Post)
 export class PostResolver {
@@ -16,11 +18,14 @@ export class PostResolver {
         return await PostModel.find();
     }
 
-    @Mutation(() => Post)
+	@Mutation(() => Post)
+	@Authorized()
     async createPost(
-        @Arg("data") { authorId, content }: PostInput
+		@Arg("data") { content }: PostInput,
+		@Ctx() ctx: IContext
     ): Promise<Post> {
-        const author = await UserModel.findById(authorId);
+		console.log(ctx);
+        const author = await UserModel.findById(ctx.payload?.userId);
         if (author) {
             const post = await PostModel.create({
                 content,

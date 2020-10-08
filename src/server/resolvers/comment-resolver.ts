@@ -1,8 +1,10 @@
-import { Post, PostModel } from "../entities/post-entitie";
-import { Resolver, Query, Arg, Mutation } from "type-graphql";
+import { Arg, Mutation, Query, Resolver, Ctx, Authorized } from "type-graphql";
+
 import { Comment, CommentModel } from "../entities/comment-entitie";
-import { CommentInput } from "./input-types/comment-input-type";
+import { Post, PostModel } from "../entities/post-entitie";
 import { UserModel } from "../entities/user-entitie";
+import { CommentInput } from "./input-types/comment-input-type";
+import { IContext } from "../interfaces/context";
 
 @Resolver(Comment)
 export class CommentResolver {
@@ -16,11 +18,13 @@ export class CommentResolver {
         return await CommentModel.find();
     }
 
-    @Mutation(() => Comment)
+	@Mutation(() => Comment)
+	@Authorized()
     async createComment(
-        @Arg("data") { authorId, content, postId }: CommentInput
+		@Arg("data") { content, postId }: CommentInput,
+		@Ctx() ctx: IContext
     ): Promise<Comment> {
-		const author = await UserModel.findById(authorId);
+		const author = await UserModel.findById(ctx.payload?.userId);
 		const post = await PostModel.findById(postId);
 		if (author && post) {
 			const comment = await CommentModel.create({

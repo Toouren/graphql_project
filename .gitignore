@@ -2,3 +2,4 @@
 /dist/
 
 schema.gql
+package-lock.json

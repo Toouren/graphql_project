@@ -1,7 +1,8 @@
-import { ObjectType, Field, ID } from "type-graphql";
-import { prop as Property, getModelForClass, Ref } from "@typegoose/typegoose";
-import { User } from "./user-entitie";
+import { getModelForClass, prop as Property } from "@typegoose/typegoose";
+import { Field, ID, ObjectType } from "type-graphql";
+
 import { Post } from "./post-entitie";
+import { User } from "./user-entitie";
 
 @ObjectType({ description: "COMMENT model" })
 export class Comment {

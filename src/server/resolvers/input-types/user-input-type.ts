@@ -1,4 +1,5 @@
-import { InputType, Field, ID } from "type-graphql";
+import { Field, InputType } from "type-graphql";
+
 import { User } from "../../entities/user-entitie";
 
 @InputType()

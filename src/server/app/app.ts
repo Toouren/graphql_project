@@ -1,11 +1,14 @@
 import express from "express";
+
+import { graphqlHTTP } from "express-graphql";
 import { connect } from "mongoose";
 import { buildSchema } from "type-graphql";
-import { graphqlHTTP } from "express-graphql";
 
+import { authChecker } from "../checkers/auth-checker";
+
+import { CommentResolver } from "../resolvers/comment-resolver";
 import { PostResolver } from "../resolvers/post-resolver";
 import { UserResolver } from "../resolvers/user-resolver";
-import { CommentResolver } from "../resolvers/comment-resolver";
 
 const main = async () => {
     /** Создание Express сервера */
@@ -16,13 +19,22 @@ const main = async () => {
         resolvers: [PostResolver, UserResolver, CommentResolver],
         emitSchemaFile: true,
         validate: false,
+        authChecker,
     });
 
     /** Установка порта для сервера */
     app.set("port", 8080);
 
     /** Мидлвара для обработки GraphQL запросов */
-    app.use("/graphql", graphqlHTTP({ schema }));
+    app.use(
+        "/api",
+        graphqlHTTP((req) => {
+			return {
+				schema,
+				context: { req }
+			}
+        })
+    );
 
     /** Установка соединения с сервером БД */
     const mongoose = await connect("mongodb://localhost:27017/test", {
