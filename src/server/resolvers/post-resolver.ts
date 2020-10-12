@@ -18,10 +18,20 @@ export class PostResolver {
         return await PostModel.find();
     }
 
+	@Query(() => [Post])
+	async postsByUserId(@Arg("userId") userId: string) {
+		const user = await UserModel.findById(userId);
+		if (user) {
+			return await PostModel.find({ author: user });
+		} else {
+			throw new Error("Author not found");
+		}
+	}
+
 	@Mutation(() => Post)
 	@Authorized()
     async createPost(
-		@Arg("data") { content }: PostInput,
+		@Arg("data") { content, title }: PostInput,
 		@Ctx() ctx: IContext
     ): Promise<Post> {
 		console.log(ctx);
@@ -29,7 +39,8 @@ export class PostResolver {
         if (author) {
             const post = await PostModel.create({
                 content,
-                author,
+				author,
+				title
             });
             await post.save();
 

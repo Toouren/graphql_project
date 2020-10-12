@@ -11,6 +11,10 @@ export class Post {
     @Property({ required: true, type: String })
     content: String;
 
+	@Field(_type => String)
+	@Property({ required: true, type: String })
+    title: String;
+
     @Field(_type => User)
     @Property({ required: true })
 	author: User;

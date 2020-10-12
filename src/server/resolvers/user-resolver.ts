@@ -20,11 +20,12 @@ export class UserResolver {
 
     @Mutation(() => User)
     async createUser(
-        @Arg("data") { login, password }: UserInput
+        @Arg("data") { login, password, name }: UserInput
     ): Promise<User> {
         const user = await UserModel.create({
             login,
-            password,
+			password,
+			name
         });
         await user.save();
 
@@ -53,6 +54,6 @@ export class UserResolver {
             throw new Error("Bad password");
         }
 
-        return { accessToken: sign({ userId: user.id }, "MySecretKey", { expiresIn: "15m" }) };
+        return { accessToken: sign({ userId: user.id }, "MySecretKey") };
     }
 }

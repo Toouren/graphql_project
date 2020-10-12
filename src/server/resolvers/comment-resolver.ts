@@ -16,7 +16,17 @@ export class CommentResolver {
     @Query(() => [Comment])
     async comments() {
         return await CommentModel.find();
-    }
+	}
+	
+	@Query(() => [Comment], { nullable: false })
+	async commentsByPostId(@Arg("postId") postId: string) {
+		const post = await PostModel.findById(postId);
+		if (post) {
+			return await CommentModel.find({ post });
+		} else {
+			throw new Error("Post not found");
+		}
+	}
 
 	@Mutation(() => Comment)
 	@Authorized()

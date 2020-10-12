@@ -5,7 +5,7 @@ import { IContext } from "../interfaces/context";
 
 export const authChecker: AuthChecker<IContext> = ({ context }, roles) => {
 
-    const authToken = context.req.headers["authorization"];
+    const authToken = context.req.headers['authorization'];
     if (!authToken) {
         throw new Error("No authorization key");
     }

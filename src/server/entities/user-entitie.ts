@@ -6,9 +6,13 @@ export class User {
     @Field(() => ID)
     id: string;
 
-    @Field((_type) => String, { nullable: true })
+    @Field((_type) => String)
     @Property({ required: true, type: String })
-    login: String;
+	login: String;
+	
+	@Field((_type) => String, { nullable: true })
+    @Property({ required: false, type: String })
+    name?: String;
 
     @Field((_type) => String)
     @Property({ required: true, type: String })

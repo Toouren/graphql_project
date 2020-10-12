@@ -1,4 +1,5 @@
 import express from "express";
+import * as cors from 'cors';
 
 import { graphqlHTTP } from "express-graphql";
 import { connect } from "mongoose";
@@ -11,6 +12,22 @@ import { PostResolver } from "../resolvers/post-resolver";
 import { UserResolver } from "../resolvers/user-resolver";
 
 const main = async () => {
+
+	const options: cors.CorsOptions = {
+		allowedHeaders: [
+		  'Origin',
+		  'X-Requested-With',
+		  'Content-Type',
+		  'Accept',
+		  'X-Access-Token',
+		  'Authorization'
+		],
+		credentials: true,
+		methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
+		origin: '*',
+		preflightContinue: false,
+	  };
+
     /** Создание Express сервера */
     const app = express();
 
@@ -27,7 +44,8 @@ const main = async () => {
 
     /** Мидлвара для обработки GraphQL запросов */
     app.use(
-        "/api",
+		"/api",
+		cors.default(options),
         graphqlHTTP((req) => {
 			return {
 				schema,
@@ -44,7 +62,7 @@ const main = async () => {
     mongoose.connection;
 
     app.listen(app.get("port"), () => {
-        console.log(`Сервер запущен на http://localhost:${app.get("port")}}`);
+        console.log(`Сервер запущен на http://localhost:${app.get("port")}`);
     });
 };
 

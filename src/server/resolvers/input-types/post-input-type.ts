@@ -6,5 +6,8 @@ import { Post } from "../../entities/post-entitie";
 @InputType()
 export class PostInput implements Partial<Post> {
     @Field()
-    content: string;
+	content: string;
+	
+	@Field()
+    title: string;
 }

@@ -8,5 +8,8 @@ export class UserInput implements Partial<User> {
     login: string;
 
     @Field()
-    password: string;
+	password: string;
+	
+	@Field({ nullable: true })
+	name?: string;
 }
